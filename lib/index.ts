@@ -100,6 +100,12 @@ export interface StaticWebsiteProps {
    * @default index.html
    */
   indexPage?: string;
+
+  /**
+   * Whether to enable website mode, which allows to "link to directory that contain an index.html file",
+   * but also requires the S3 bucket to be publicly accessible, hence no guarantees all traffic comes through CloudFront
+   */
+  websiteMode?: boolean;
 }
 
 const trimSlashes = (str: string): string => str.replace(/^\/+/, '').replace(/^\/+/, '');
@@ -190,8 +196,14 @@ export class StaticWebsite extends cdk.Construct {
       return new s3.Bucket(this, 'Bucket', {
         bucketName: props.bucket,
 
-        // this bucket is _not_ a website, it's contents are _only_ exposed via CloudFront
-        publicReadAccess: false,
+        // whether or not website configuration is enabled
+        ...(props.websiteMode
+          ? {
+              publicReadAccess: true,
+              websiteIndexDocument: props.indexPage ?? 'index.html',
+              websiteErrorDocument: props.errorPage ?? 'error.html',
+            }
+          : {}),
 
         // enable encryption at rest of the blog contents - not that it is public anyway ..
         encryption: s3.BucketEncryption.S3_MANAGED,

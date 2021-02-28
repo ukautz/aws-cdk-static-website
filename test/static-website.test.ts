@@ -106,9 +106,85 @@ describe('Stack Website', () => {
     });
   });
 
-  describe('Can configure', () => {
-    // WHEN
-    const stack = createTestStack({});
+  describe('Website mode', () => {
+    describe('Disabled', () => {
+      // WHEN
+      const stack = createTestStack({
+        websiteMode: false,
+      });
+
+      // THEN
+      assertSnapshot(stack);
+      test('Bucket website configuration is NOT enabled', () => {
+        expectCDK(stack).to(
+          haveResource('AWS::S3::Bucket', {
+            BucketEncryption: {
+              ServerSideEncryptionConfiguration: [
+                {
+                  ServerSideEncryptionByDefault: {
+                    SSEAlgorithm: 'AES256',
+                  },
+                },
+              ],
+            },
+          })
+        );
+      });
+      test('CloudFront uses S3 origin', () => {
+        expectCDK(stack).to(
+          haveResourceLike('AWS::CloudFront::Distribution', {
+            DistributionConfig: {
+              Origins: [
+                {
+                  S3OriginConfig: undefined,
+                },
+              ],
+            },
+          })
+        );
+      });
+    });
+    describe('Enabled', () => {
+      // WHEN
+      const stack = createTestStack({
+        websiteMode: true,
+      });
+
+      // THEN
+      assertSnapshot(stack);
+      test('Bucket website configuration IS enabled', () => {
+        expectCDK(stack).to(
+          haveResource('AWS::S3::Bucket', {
+            WebsiteConfiguration: {
+              ErrorDocument: 'error.html',
+              IndexDocument: 'index.html',
+            },
+            BucketEncryption: {
+              ServerSideEncryptionConfiguration: [
+                {
+                  ServerSideEncryptionByDefault: {
+                    SSEAlgorithm: 'AES256',
+                  },
+                },
+              ],
+            },
+          })
+        );
+      });
+      test('CloudFront uses custom origin', () => {
+        expectCDK(stack).to(
+          haveResourceLike('AWS::CloudFront::Distribution', {
+            DistributionConfig: {
+              Origins: [
+                {
+                  CustomOriginConfig: undefined,
+                },
+              ],
+            },
+          })
+        );
+      });
+    });
   });
 });
 
