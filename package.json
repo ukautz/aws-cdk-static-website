@@ -1,6 +1,6 @@
 {
-  "name": "@ukautz/aws-cdk-blogstack-static-website",
-  "version": "1.91.0-alpha2",
+  "name": "@ukautz/aws-cdk-static-website",
+  "version": "1.91.0-alpha3",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {

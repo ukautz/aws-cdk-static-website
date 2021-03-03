@@ -78,6 +78,12 @@ export interface StaticWebsiteProps {
   domain: string;
 
   /**
+   * Additional list of domain names.
+   * MUST be in the same hosted zone as above!
+   */
+  domainAliases?: string[];
+
+  /**
    * Object key of 404 error page in bucket
    */
   errorPage?: string;
@@ -92,7 +98,7 @@ export interface StaticWebsiteProps {
   /**
    * The hosted zone in which the A record for the domain, pointing to CloudFront, is to be created
    */
-  hostedZone: { name: string; id: string } | route53.IHostedZone;
+  hostedZone: route53.IHostedZone;
 
   /**
    * Object key of default index page in bucket
@@ -119,8 +125,8 @@ export class StaticWebsite extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: StaticWebsiteProps) {
     super(scope, id);
 
+    this.hostedZone = props.hostedZone;
     this.bucket = this.loadBucket(props);
-    this.hostedZone = this.loadHostedZone(props);
     this.certificate = this.loadCertificate(props);
     this.distribution = this.initDistribution(props);
     this.record = this.initRecord(props);
@@ -149,7 +155,7 @@ export class StaticWebsite extends cdk.Construct {
     const asPath = (path?: string, prefixed?: boolean) =>
       path ? `/${(prefixed ? props.bucketContentPrefix ?? '' : '') + trimSlashes(path)}` : undefined;
     return new cloudfront.Distribution(this, 'Distribution', {
-      domainNames: [props.domain],
+      domainNames: [props.domain].concat(...(props.domainAliases ?? [])),
       certificate: this.certificate,
       defaultRootObject: props.indexPage ?? 'index.html',
       defaultBehavior: {
@@ -215,16 +221,6 @@ export class StaticWebsite extends cdk.Construct {
     return props.bucket;
   }
 
-  private loadHostedZone(props: StaticWebsiteProps): route53.IHostedZone {
-    if ('id' in props.hostedZone) {
-      return route53.HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
-        hostedZoneId: props.hostedZone.id,
-        zoneName: props.hostedZone.name,
-      });
-    }
-    return props.hostedZone;
-  }
-
   private loadCertificate(props: StaticWebsiteProps): acm.ICertificate {
     if (typeof props.certificate === 'string') {
       acm.Certificate.fromCertificateArn(this, 'Certificate', props.certificate);
@@ -233,6 +229,7 @@ export class StaticWebsite extends cdk.Construct {
     }
     return new acm.DnsValidatedCertificate(this, 'Certificate', {
       domainName: props.domain,
+      subjectAlternativeNames: props.domainAliases,
       hostedZone: this.hostedZone,
       region: 'us-east-1',
     });

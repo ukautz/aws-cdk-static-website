@@ -1,5 +1,6 @@
-import { expect as expectCDK, countResources, haveResource, SynthUtils, haveResourceLike } from '@aws-cdk/assert';
+import { expect as expectCDK, countResources, haveResource, haveResourceLike } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
+import * as route53 from '@aws-cdk/aws-route53';
 import * as path from 'path';
 import { assertSnapshot } from './utils';
 
@@ -186,6 +187,33 @@ describe('Stack Website', () => {
       });
     });
   });
+
+  describe('Domain aliases', () => {
+    // WHEN
+    const stack = createTestStack({
+      domainAliases: ['www.blog.acme.tld'],
+    });
+
+    // THEN
+    assertSnapshot(stack);
+    test('Used in certificate generation', () => {
+      expectCDK(stack).to(
+        haveResourceLike('AWS::CloudFormation::CustomResource', {
+          DomainName: 'blog.acme.tld',
+          SubjectAlternativeNames: ['www.blog.acme.tld'],
+        })
+      );
+    });
+    test('Used as CloudFront alias', () => {
+      expectCDK(stack).to(
+        haveResourceLike('AWS::CloudFront::Distribution', {
+          DistributionConfig: {
+            Aliases: ['blog.acme.tld', 'www.blog.acme.tld'],
+          },
+        })
+      );
+    });
+  });
 });
 
 function createTestStack(
@@ -193,10 +221,13 @@ function createTestStack(
   generate?: (stack: cdk.Stack) => Partial<lib.StaticWebsiteProps>
 ): cdk.Stack {
   const stack = new cdk.Stack();
+  const hostedZone = new route53.HostedZone(stack, 'HostedZone', {
+    zoneName: 'acme.tld',
+  });
   new lib.StaticWebsite(stack, 'MyTestConstruct', {
     directory: path.join(__dirname, '__fixtures__'),
     domain: 'blog.acme.tld',
-    hostedZone: { id: 'hosted-zone-id', name: 'acme.tld' },
+    hostedZone,
     ...props,
     ...(generate ? generate(stack) : {}),
   });

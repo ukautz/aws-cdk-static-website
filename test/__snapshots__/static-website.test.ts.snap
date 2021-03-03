@@ -245,6 +245,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -385,7 +391,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -437,7 +446,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -666,7 +677,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -921,6 +934,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -1061,7 +1080,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -1113,7 +1135,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -1350,7 +1374,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -1605,6 +1631,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -1745,7 +1777,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -1797,7 +1832,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -2026,7 +2063,702 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
+        "Name": "blog.acme.tld.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+  },
+}
+`;
+
+exports[`Stack Website Domain aliases Snapshot is consistent 1`] = `
+Object {
+  "Mappings": Object {
+    "AWSCloudFrontPartitionHostedZoneIdMap": Object {
+      "aws": Object {
+        "zoneId": "Z2FDTNDATAQYW2",
+      },
+      "aws-cn": Object {
+        "zoneId": "Z3RFFRIM2A3IF5",
+      },
+    },
+  },
+  "Parameters": Object {
+    "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2ArtifactHash652C125C": Object {
+      "Description": "Artifact hash for asset \\"19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2\\"",
+      "Type": "String",
+    },
+    "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3BucketFCCD3A76": Object {
+      "Description": "S3 bucket for asset \\"19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2\\"",
+      "Type": "String",
+    },
+    "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6": Object {
+      "Description": "S3 key for asset version \\"19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2\\"",
+      "Type": "String",
+    },
+    "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dArtifactHash8914D312": Object {
+      "Description": "Artifact hash for asset \\"66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3BucketA83316BE": Object {
+      "Description": "S3 bucket for asset \\"66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3VersionKeyD91AD101": Object {
+      "Description": "S3 key for asset version \\"66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8d\\"",
+      "Type": "String",
+    },
+    "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfArtifactHash85F58E48": Object {
+      "Description": "Artifact hash for asset \\"c24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cf\\"",
+      "Type": "String",
+    },
+    "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfS3Bucket55EFA30C": Object {
+      "Description": "S3 bucket for asset \\"c24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cf\\"",
+      "Type": "String",
+    },
+    "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfS3VersionKey60329B70": Object {
+      "Description": "S3 key for asset version \\"c24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cf\\"",
+      "Type": "String",
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68ArtifactHashD9A515C3": Object {
+      "Description": "Artifact hash for asset \\"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\\"",
+      "Type": "String",
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketAEADE8C7": Object {
+      "Description": "S3 bucket for asset \\"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\\"",
+      "Type": "String",
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F": Object {
+      "Description": "S3 key for asset version \\"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\\"",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536": Object {
+      "DependsOn": Array [
+        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfS3Bucket55EFA30C",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfS3VersionKey60329B70",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersc24b999656e4fe6c609c31bae56a1cf4717a405619c3aa6ba1bc686b8c2c86cfS3VersionKey60329B70",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": Array [
+          Object {
+            "Ref": "MyTestConstructDeploymentAwsCliLayerFFFCF7AD",
+          },
+        ],
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+            "Arn",
+          ],
+        },
+        "Runtime": "python3.6",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3BucketA83316BE",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::",
+                      Object {
+                        "Ref": "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3BucketA83316BE",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "MyTestConstructBucketC00BBB11",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "MyTestConstructBucketC00BBB11",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+        "Roles": Array [
+          Object {
+            "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
+    "MyTestConstructBucketC00BBB11": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "BucketEncryption": Object {
+          "ServerSideEncryptionConfiguration": Array [
+            Object {
+              "ServerSideEncryptionByDefault": Object {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MyTestConstructBucketPolicyE5FFA623": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "MyTestConstructBucketC00BBB11",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": Object {
+                "CanonicalUser": Object {
+                  "Fn::GetAtt": Array [
+                    "MyTestConstructDistributionOrigin1S3Origin28BA8C4A",
+                    "S3CanonicalUserId",
+                  ],
+                },
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "MyTestConstructBucketC00BBB11",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": Object {
+      "DependsOn": Array [
+        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
+        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3BucketFCCD3A76",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "index.certificateRequestHandler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs10.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "acm:RequestCertificate",
+                "acm:DescribeCertificate",
+                "acm:DeleteCertificate",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": "route53:GetChange",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": "route53:changeResourceRecordSets",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
+        "Roles": Array [
+          Object {
+            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DomainName": "blog.acme.tld",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
+        "Region": "us-east-1",
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
+            "Arn",
+          ],
+        },
+        "SubjectAlternativeNames": Array [
+          "www.blog.acme.tld",
+        ],
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": Object {
+      "Properties": Object {
+        "Content": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketAEADE8C7",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "/opt/awscli/aws",
+      },
+      "Type": "AWS::Lambda::LayerVersion",
+    },
+    "MyTestConstructDeploymentCustomResource43CF3783": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestinationBucketName": Object {
+          "Ref": "MyTestConstructBucketC00BBB11",
+        },
+        "Prune": true,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536",
+            "Arn",
+          ],
+        },
+        "SourceBucketNames": Array [
+          Object {
+            "Ref": "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3BucketA83316BE",
+          },
+        ],
+        "SourceObjectKeys": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3VersionKeyD91AD101",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters66e87c9593562c2a224127328196d954bd7b7479e5d26e5863d7876dfb1b0d8dS3VersionKeyD91AD101",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MyTestConstructDistribution60637A64": Object {
+      "Properties": Object {
+        "DistributionConfig": Object {
+          "Aliases": Array [
+            "blog.acme.tld",
+            "www.blog.acme.tld",
+          ],
+          "DefaultCacheBehavior": Object {
+            "AllowedMethods": Array [
+              "GET",
+              "HEAD",
+            ],
+            "CachePolicyId": Object {
+              "Ref": "MyTestConstructDistributionCachePolicyE354731C",
+            },
+            "CachedMethods": Array [
+              "GET",
+              "HEAD",
+            ],
+            "Compress": true,
+            "OriginRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf",
+            "TargetOriginId": "MyTestConstructDistributionOrigin1F0B203BE",
+            "ViewerProtocolPolicy": "redirect-to-https",
+          },
+          "DefaultRootObject": "index.html",
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": Array [
+            Object {
+              "DomainName": Object {
+                "Fn::GetAtt": Array [
+                  "MyTestConstructBucketC00BBB11",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": "MyTestConstructDistributionOrigin1F0B203BE",
+              "S3OriginConfig": Object {
+                "OriginAccessIdentity": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "origin-access-identity/cloudfront/",
+                      Object {
+                        "Ref": "MyTestConstructDistributionOrigin1S3Origin28BA8C4A",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "ViewerCertificate": Object {
+            "AcmCertificateArn": Object {
+              "Fn::GetAtt": Array [
+                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
+                "Arn",
+              ],
+            },
+            "MinimumProtocolVersion": "TLSv1.2_2019",
+            "SslSupportMethod": "sni-only",
+          },
+        },
+      },
+      "Type": "AWS::CloudFront::Distribution",
+    },
+    "MyTestConstructDistributionCachePolicyE354731C": Object {
+      "Properties": Object {
+        "CachePolicyConfig": Object {
+          "DefaultTTL": 3600,
+          "MaxTTL": 31536000,
+          "MinTTL": 0,
+          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "ParametersInCacheKeyAndForwardedToOrigin": Object {
+            "CookiesConfig": Object {
+              "CookieBehavior": "none",
+            },
+            "EnableAcceptEncodingBrotli": false,
+            "EnableAcceptEncodingGzip": false,
+            "HeadersConfig": Object {
+              "HeaderBehavior": "none",
+            },
+            "QueryStringsConfig": Object {
+              "QueryStringBehavior": "none",
+            },
+          },
+        },
+      },
+      "Type": "AWS::CloudFront::CachePolicy",
+    },
+    "MyTestConstructDistributionOrigin1S3Origin28BA8C4A": Object {
+      "Properties": Object {
+        "CloudFrontOriginAccessIdentityConfig": Object {
+          "Comment": "Identity for MyTestConstructDistributionOrigin1F0B203BE",
+        },
+      },
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+    },
+    "MyTestConstructRecord98D515D4": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::GetAtt": Array [
+              "MyTestConstructDistribution60637A64",
+              "DomainName",
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::FindInMap": Array [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              "zoneId",
+            ],
+          },
+        },
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -2281,6 +3013,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -2422,7 +3160,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -2474,7 +3215,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -2703,7 +3446,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -2958,6 +3703,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -3098,7 +3849,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -3150,7 +3904,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -3381,7 +4137,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -3683,6 +4441,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": Object {
       "DependsOn": Array [
         "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
@@ -3768,7 +4532,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -3820,7 +4587,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -4049,7 +4818,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -4304,6 +5075,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -4444,7 +5221,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -4496,7 +5276,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -4725,7 +5507,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
@@ -4980,6 +5764,12 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "HostedZoneDB99F866": Object {
+      "Properties": Object {
+        "Name": "acme.tld.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
     "MyTestConstructBucketC00BBB11": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -5117,7 +5907,10 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":route53:::hostedzone/hosted-zone-id",
+                    ":route53:::hostedzone/",
+                    Object {
+                      "Ref": "HostedZoneDB99F866",
+                    },
                   ],
                 ],
               },
@@ -5169,7 +5962,9 @@ Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Region": "us-east-1",
         "ServiceToken": Object {
           "Fn::GetAtt": Array [
@@ -5393,7 +6188,9 @@ Object {
             ],
           },
         },
-        "HostedZoneId": "hosted-zone-id",
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
         "Name": "blog.acme.tld.",
         "Type": "A",
       },
