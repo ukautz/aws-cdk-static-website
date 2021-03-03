@@ -120,7 +120,7 @@ export class StaticWebsite extends cdk.Construct {
   public readonly bucket: s3.IBucket;
   public readonly certificate: acm.ICertificate;
   public readonly distribution: cloudfront.IDistribution;
-  public readonly record: route53.IRecordSet;
+  public readonly records: route53.IRecordSet[];
 
   constructor(scope: cdk.Construct, id: string, props: StaticWebsiteProps) {
     super(scope, id);
@@ -129,7 +129,7 @@ export class StaticWebsite extends cdk.Construct {
     this.bucket = this.loadBucket(props);
     this.certificate = this.loadCertificate(props);
     this.distribution = this.initDistribution(props);
-    this.record = this.initRecord(props);
+    this.records = this.initRecords(props);
     this.uploadContents(props);
   }
 
@@ -180,11 +180,14 @@ export class StaticWebsite extends cdk.Construct {
     });
   }
 
-  private initRecord(props: StaticWebsiteProps): route53.IRecordSet {
-    return new route53.ARecord(this, 'Record', {
-      recordName: props.domain,
-      target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(this.distribution)),
-      zone: this.hostedZone,
+  private initRecords(props: StaticWebsiteProps): route53.IRecordSet[] {
+    const target = route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(this.distribution));
+    return [props.domain, ...(props.domainAliases ?? [])].map((domain) => {
+      return new route53.ARecord(this, `Record_${domain}`, {
+        recordName: domain,
+        zone: this.hostedZone,
+        target,
+      });
     });
   }
 

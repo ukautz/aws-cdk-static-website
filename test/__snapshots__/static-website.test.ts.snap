@@ -658,7 +658,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -1355,7 +1355,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -2044,7 +2044,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -2737,7 +2737,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -2760,6 +2760,33 @@ Object {
           "Ref": "HostedZoneDB99F866",
         },
         "Name": "blog.acme.tld.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "MyTestConstructRecordwwwblogacmetld992CC38C": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::GetAtt": Array [
+              "MyTestConstructDistribution60637A64",
+              "DomainName",
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::FindInMap": Array [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              "zoneId",
+            ],
+          },
+        },
+        "HostedZoneId": Object {
+          "Ref": "HostedZoneDB99F866",
+        },
+        "Name": "www.blog.acme.tld.",
         "Type": "A",
       },
       "Type": "AWS::Route53::RecordSet",
@@ -3427,7 +3454,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -4118,7 +4145,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -4799,7 +4826,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -5488,7 +5515,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {
@@ -6169,7 +6196,7 @@ Object {
       },
       "Type": "AWS::CloudFront::CachePolicy",
     },
-    "MyTestConstructRecord98D515D4": Object {
+    "MyTestConstructRecordblogacmetldC8FCD655": Object {
       "Properties": Object {
         "AliasTarget": Object {
           "DNSName": Object {

@@ -213,6 +213,9 @@ describe('Stack Website', () => {
         })
       );
     });
+    test('Has all delegation records', () => {
+      expectCDK(stack).to(countResources('AWS::Route53::RecordSet', 2));
+    });
   });
 });
 
