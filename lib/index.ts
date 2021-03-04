@@ -12,20 +12,27 @@ export interface StaticWebsiteProps {
   /**
    * The bucket which will contain the website contents.
    *
-   * Optional, will be created otherwise. If
+   * Can be:
+   * - undefined: new bucket will be created and maintained by the construct (deleted when removed, it's supposed to be generated static website data)
+   * - "bucket-name": existing bucket by that name will be used
+   * - s3.IBucket: existing provided bucket will be used
    */
   bucket?: string | s3.IBucket;
 
   /**
    * The prefix (path) where the contents can be found in the bucket
+   *
+   * @default empty (no prefix)
    */
   bucketContentPrefix?: string;
 
   /**
-   * Certificate can be provided as:
-   * - undefined - creates a new certificate (managed)
-   * - string (arn) - loads existing certificate
-   * - actual certificate - uses that
+   * The certificate assigned to CloudFront distribution
+   *
+   * Can be:
+   * - undefined: new certificate will be created and maintained by the construct
+   * - "arn" - loads existing certificate
+   * - acm.ICertificate: uses provided certificate
    *
    *  If provided in any way, HTTPS will be enforced
    */
@@ -40,7 +47,9 @@ export interface StaticWebsiteProps {
 
   /**
    * Whether and which request cookies to use in cache key
-   * - false: disabled, ignore cookies
+   *
+   * Can be:
+   * - undefined or false: disabled, ignore cookies
    * - true: enabled (all cookies)
    * - string[]: allow list of cookie names
    *
@@ -50,7 +59,9 @@ export interface StaticWebsiteProps {
 
   /**
    * Whether and which request headers to use in cache key
-   * - false: disabled, ignore headers
+   *
+   * Can be:
+   * - undefined or false: disabled, ignore headers
    * - string[]: allow list of cookie names
    *
    * @default false
@@ -59,7 +70,9 @@ export interface StaticWebsiteProps {
 
   /**
    * Whether and which request query parameter to use in cache key
-   * - false: disabled, ignore headers
+   *
+   * Can be:
+   * - undefined or false: disabled, ignore headers
    * - true: enabled (all request query parameter)
    * - string[]: allow list of cookie names
    *
@@ -79,7 +92,8 @@ export interface StaticWebsiteProps {
 
   /**
    * Additional list of domain names.
-   * MUST be in the same hosted zone as above!
+   *
+   * Note: MUST be in the same hosted zone as domain!
    */
   domainAliases?: string[];
 
@@ -116,10 +130,29 @@ export interface StaticWebsiteProps {
 
 const trimSlashes = (str: string): string => str.replace(/^\/+/, '').replace(/^\/+/, '');
 export class StaticWebsite extends cdk.Construct {
+  /**
+   * The hosted zone used for the static website
+   */
   public readonly hostedZone: route53.IHostedZone;
+
+  /**
+   * The bucket in which the static website contents are in
+   */
   public readonly bucket: s3.IBucket;
+
+  /**
+   * The certificate associated with the CloudFront that serves the static website
+   */
   public readonly certificate: acm.ICertificate;
+
+  /**
+   * The CloudFront distribution that serves the static website
+   */
   public readonly distribution: cloudfront.IDistribution;
+
+  /**
+   * The DNS records for the domain and domain aliases that point to the CloudFront that serves the static website
+   */
   public readonly records: route53.IRecordSet[];
 
   constructor(scope: cdk.Construct, id: string, props: StaticWebsiteProps) {

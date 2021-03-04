@@ -40,15 +40,16 @@ export class YourStack extends cdk.Stack {
 }
 ```
 
-TODO: describe parameters
 
 ## Notes
 
 This is a very opinionated implementation:
-- *S3 bucket not as website*: In "website mode", an S3 bucket is public. I prefer the bucket to be completely transparent and not accessible, so this is the default. As a consequence, the fallback to `index.html` does not work. I mitigate that on the build site, by assuring all links point to specific documents, not folders that would require a fallback to said `index.html` document. To enable website mode use `websiteMode: true`
-- *All (peer-)dependencies are pinned version*, as `@experimental` constructs are being used, interface changes in minor upgrades are expected. I plan to use [dependabot](https://dependabot.com/), or a more targeted implementation, to automatically build this (and all my other AWS CDK modules) whenever a new AWS CDK version is released.
+
+- _S3 bucket not as website_: In "website mode", an S3 bucket is public. I prefer the bucket to be completely transparent and not accessible, so this is the default. As a consequence, the fallback to `index.html` does not work. I mitigate that on the build site, by assuring all links point to specific documents, not folders that would require a fallback to said `index.html` document. To enable website mode use `websiteMode: true`
+- _All (peer-)dependencies are pinned version_, as `@experimental` constructs are being used, interface changes in minor upgrades are expected. I plan to use [dependabot](https://dependabot.com/), or a more targeted implementation, to automatically build this (and all my other AWS CDK modules) whenever a new AWS CDK version is released.
+
 ## Useful commands
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
+- `npm run build` compile typescript to js
+- `npm run watch` watch for changes and compile
+- `npm run test` perform the jest unit tests
