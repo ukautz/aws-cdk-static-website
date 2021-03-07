@@ -36,9 +36,17 @@ jobs:
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
           echo $version > version.new
-      - name: Bump package version to dependency version
+      - name: Configure github access
         run: |
           set -e
+          cat >>~/.netrc <<EOF
+          machine github.com
+            login $GITHUB_ACTOR
+            password $GITHUB_TOKEN
+          EOF
+
+        run: |
+          set -ex
 
           # set new version, there must be an easier way ..
           currentVersion=$(cat version.current)
