@@ -44,7 +44,7 @@ jobs:
             login $GITHUB_ACTOR
             password $GITHUB_TOKEN
           EOF
-
+      - name: Bump package version to dependency version
         run: |
           set -ex
 
