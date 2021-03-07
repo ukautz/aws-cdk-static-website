@@ -28,7 +28,7 @@ jobs:
           echo $version > version.current
       - name: Update AWS CDK dependencies
         run: |
-          npx update-by-scope @example npm install
+          npx update-by-scope @aws-cdk npm install
       - name: Test with updated dependencies
         run: |
           npm run test
@@ -49,7 +49,8 @@ jobs:
           git config --global user.name 'Github Actions'
           git config --global user.email 'ukautz@users.noreply.github.com'
 
-          # add & commit
+          # add to branch & commit
+          git branch chore/aws-cdk-upgrade-${newVersion}
           git add package.json package-lock.json
           git commit -m "AWS CDK package update"
 
