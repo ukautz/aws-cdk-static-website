@@ -53,6 +53,9 @@ jobs:
           newVersion=$(cat version.new)
           sed -i -e 's/"version": "[^"]*",/"version": "'${newVersion}'-alpha1",/' package.json
 
+          # replace peer dependencies manually
+          sed -i -e 's/"'${currentVersion}'"/"'${newVersion}'"/g' package.json
+
           # create persona
           git config --global user.name 'Github Actions'
           git config --global user.email 'ukautz@users.noreply.github.com'
