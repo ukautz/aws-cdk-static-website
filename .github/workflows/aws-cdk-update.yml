@@ -3,6 +3,7 @@ name: Update AWS CDK packages
 on:
   schedule:
     - cron: "0 20 * * 6" # everyday at 10am
+  workflow_dispatch: {}
 
 jobs:
   release:
