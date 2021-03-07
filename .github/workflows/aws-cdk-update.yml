@@ -1,0 +1,58 @@
+name: Update AWS CDK packages
+
+on:
+  schedule:
+    - cron: "0 20 * * 6" # everyday at 10am
+
+jobs:
+  release:
+    name: Publish to Github Packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Versions
+        run: |
+          node --version
+          npm --version
+      - name: Install current dependencies
+        run: |
+          npm install
+      - name: Stash current version
+        run: |
+          version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
+          echo $version > version.current
+      - name: Update AWS CDK dependencies
+        run: |
+          npx update-by-scope @example npm install
+      - name: Test with updated dependencies
+        run: |
+          npm run test
+      - name: Stash new version
+        run: |
+          version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
+          echo $version > version.new
+      - name: Bump package version to dependency version
+        run: |
+          set -e
+
+          # set new version, there must be an easier way ..
+          currentVersion=$(cat version.current)
+          newVersion=$(cat version.new)
+          sed -i -e 's/"version": "[^"]*",/"version": "'${newVersion}'-alpha1",/' package.json
+
+          # create persona
+          git config --global user.name 'Github Actions'
+          git config --global user.email 'ukautz@users.noreply.github.com'
+
+          # add & commit
+          git add package.json package-lock.json
+          git commit -m "AWS CDK package update"
+
+          # push & pr
+          git push origin chore/aws-cdk-upgrade-${newVersion}
+          hub pull-request -m "Update AWS CDK from ${currentVersion} to ${newVersion}" -l chore,aws-cdk-update
+
