@@ -58,7 +58,7 @@ jobs:
           git config --global user.email 'ukautz@users.noreply.github.com'
 
           # add to branch & commit
-          git branch chore/aws-cdk-upgrade-${newVersion}
+          git checkout -b chore/aws-cdk-upgrade-${newVersion}
           git add package.json package-lock.json
           git commit -m "AWS CDK package update"
 
