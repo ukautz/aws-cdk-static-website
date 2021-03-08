@@ -19,6 +19,9 @@ jobs:
         run: |
           node --version
           npm --version
+      - name: Why I need to pull
+        run: |
+          git pull
       - name: Install current dependencies
         run: |
           npm install
