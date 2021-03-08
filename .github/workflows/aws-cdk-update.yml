@@ -36,6 +36,19 @@ jobs:
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
           echo "::save-state name=newVersion::${version}"
+      - name: Configure Github access
+        run: |
+          set -e
+          cat >>~/.netrc <<EOF
+          machine github.com
+            login $GITHUB_ACTOR
+            password $GITHUB_TOKEN
+          EOF
+      - name: Configure Github Persona
+        run: |
+          set -e
+          git config --global user.name 'Github Actions'
+          git config --global user.email 'ukautz@users.noreply.github.com'
       - name: Bump package version to dependency version
         run: |
           set -ex
@@ -58,10 +71,6 @@ jobs:
 
           # replace all dependencies with pinned to new
           sed -i -e 's/"^*'${currentVersion}'"/"'${newVersion}'"/g' package.json
-
-          # create persona
-          git config --global user.name 'Github Actions'
-          git config --global user.email 'ukautz@users.noreply.github.com'
 
           # add to branch & commit
           git checkout -b chore/aws-cdk-upgrade-${newVersion}
