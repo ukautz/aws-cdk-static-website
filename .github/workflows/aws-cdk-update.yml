@@ -36,7 +36,12 @@ jobs:
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
           echo "::save-state name=newVersion::${version}"
+      - name: Configure Github Persona
+        if: env.STATUS_currentVersion == env.STATUS_newVersion
+        run: |
+          echo "Doing nothing, current version ${STATE_currentVersion} is still the latest"
       - name: Configure Github access
+        if: env.STATUS_currentVersion != env.STATUS_newVersion
         run: |
           set -e
           cat >>~/.netrc <<EOF
@@ -45,19 +50,15 @@ jobs:
             password $GITHUB_TOKEN
           EOF
       - name: Configure Github Persona
+        if: env.STATUS_currentVersion != env.STATUS_newVersion
         run: |
           set -e
           git config --global user.name 'Github Actions'
           git config --global user.email 'ukautz@users.noreply.github.com'
       - name: Bump package version in new branch
+        if: env.STATUS_currentVersion != env.STATUS_newVersion
         run: |
           set -ex
-
-          # bail out?
-          if [ "$STATE_currentVersion" == "$STATE_newVersion" ]; then
-            echo "::set-output name=takenAction::none"
-            exit
-          fi
 
           # set new package version
           echo "::set-output name=takenAction::update from ${STATE_currentVersion} to ${STATE_newVersion}"
@@ -72,8 +73,8 @@ jobs:
           git checkout -b chore/aws-cdk-upgrade-${STATE_newVersion}
           git add package.json package-lock.json
           git commit -m "AWS CDK package update"
-
       - name: Create PR on Github
+        if: env.STATUS_currentVersion != env.STATUS_newVersion
         run: |
           set -ex
           git push origin chore/aws-cdk-upgrade-${STATE_newVersion}
