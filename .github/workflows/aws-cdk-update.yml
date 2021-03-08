@@ -48,19 +48,15 @@ jobs:
       - name: Configure Github Persona
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
-          set -e
           git config --global user.name 'Github Actions'
           git config --global user.email 'ukautz@users.noreply.github.com'
       - name: Bump package version in new branch
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
-          set -ex
-
-          # replace own version with alpha referencing latest
+          # replace all old versions with
           sed -i -e 's/"version": "[^"]*",/"version": "${{ env.CDK_VERSION_NEW }}-alpha1",/' package.json
-
-          # replace all dependencies with pinned to new
           sed -i -e 's/"^*${{ env.CDK_VERSION_CURRENT }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
+          sed -i -e 's/"^*${{ env.CDK_VERSION_NEW }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
 
           # add to branch & commit
           git checkout -b ${{ env.NEW_BRANCH }}
@@ -69,7 +65,6 @@ jobs:
       - name: Create PR on Github
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
-          set -ex
           git push origin ${{ env.NEW_BRANCH }}
           hub pull-request -b main -h ${{ env.NEW_BRANCH }} -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
         env:
