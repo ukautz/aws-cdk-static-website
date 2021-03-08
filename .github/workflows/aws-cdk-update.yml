@@ -49,35 +49,33 @@ jobs:
           set -e
           git config --global user.name 'Github Actions'
           git config --global user.email 'ukautz@users.noreply.github.com'
-      - name: Bump package version to dependency version
+      - name: Bump package version in new branch
         run: |
           set -ex
 
-          # set new version, there must be an easier way ..
-          currentVersion=$STATE_currentVersion
-          newVersion=$STATE_newVersion
-
           # bail out?
-          if [ $currentVersion == $newVersion ]; then
+          if [ "$STATE_currentVersion" == "$STATE_newVersion" ]; then
             echo "::set-output name=takenAction::none"
             exit
           fi
 
           # set new package version
-          echo "::set-output name=takenAction::update from ${currentVersion} to ${newVersion}"
+          echo "::set-output name=takenAction::update from ${STATE_currentVersion} to ${STATE_newVersion}"
 
           # replace own version with alpha referencing latest
-          sed -i -e 's/"version": "[^"]*",/"version": "'${newVersion}'-alpha1",/' package.json
+          sed -i -e 's/"version": "[^"]*",/"version": "'${STATE_newVersion}'-alpha1",/' package.json
 
           # replace all dependencies with pinned to new
-          sed -i -e 's/"^*'${currentVersion}'"/"'${newVersion}'"/g' package.json
+          sed -i -e 's/"^*'${STATE_currentVersion}'"/"'${STATE_newVersion}'"/g' package.json
 
           # add to branch & commit
-          git checkout -b chore/aws-cdk-upgrade-${newVersion}
+          git checkout -b chore/aws-cdk-upgrade-${STATE_newVersion}
           git add package.json package-lock.json
           git commit -m "AWS CDK package update"
 
-          # push & pr
-          git push origin chore/aws-cdk-upgrade-${newVersion}
-          hub pull-request -m "Update AWS CDK from ${currentVersion} to ${newVersion}" -l chore,aws-cdk-update
+      - name: Create PR on Github
+        run: |
+          set -ex
+          git push origin chore/aws-cdk-upgrade-${STATE_newVersion}
+          hub pull-request -m "Update AWS CDK from ${STATE_currentVersion} to ${STATE_newVersion}" -l chore,aws-cdk-update
 
