@@ -44,6 +44,7 @@ jobs:
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
           echo "Updating current version ${{ env.CDK_VERSION_CURRENT }} to new version ${{ env.CDK_VERSION_NEW }}"
+          echo "NEW_BRANCH=chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}" >> $GITHUB_ENV
       - name: Configure Github Persona
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
@@ -62,15 +63,15 @@ jobs:
           sed -i -e 's/"^*${{ env.CDK_VERSION_CURRENT }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
 
           # add to branch & commit
-          git checkout -b chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}
+          git checkout -b ${{ env.NEW_BRANCH }}
           git add package.json package-lock.json
           git commit -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}"
       - name: Create PR on Github
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
           set -ex
-          git push origin chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}
-          hub pull-request -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
+          git push origin ${{ env.NEW_BRANCH }}
+          hub pull-request -b main -h ${{ env.NEW_BRANCH }} -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
