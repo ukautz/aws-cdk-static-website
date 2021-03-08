@@ -19,20 +19,20 @@ jobs:
         run: |
           node --version
           npm --version
-      - name: Install current dependencies
+      - name: Install Current Dependencies
         run: |
           npm install
       - name: Stash current version
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
           echo "CDK_VERSION_CURRENT=${version}" >> $GITHUB_ENV
-      - name: Update AWS CDK dependencies
+      - name: Update AWS CDK Dependencies
         run: |  
           npx update-by-scope @aws-cdk npm install
       - name: Test with updated dependencies
         run: |
           npm run test
-      - name: Stash new version
+      - name: Stash New Version
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
           echo "CDK_VERSION_NEW=${version}" >> $GITHUB_ENV
@@ -40,6 +40,10 @@ jobs:
         if: env.CDK_VERSION_CURRENT == env.CDK_VERSION_NEW
         run: |
           echo "Doing nothing, current version ${CDK_VERSION_NEW} is still the latest"
+      - name: Describing Update
+        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
+        run: |
+          echo "Updating current version ${{ env.CDK_VERSION_CURRENT }} to new version ${{ env.CDK_VERSION_NEW }} is still the latest"
       - name: Configure Github access
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
@@ -60,23 +64,20 @@ jobs:
         run: |
           set -ex
 
-          # set new package version
-          echo "::set-output name=takenAction::update from ${CDK_VERSION_NEW} to ${STATE_newVersion}"
-
           # replace own version with alpha referencing latest
-          sed -i -e 's/"version": "[^"]*",/"version": "'${STATE_newVersion}'-alpha1",/' package.json
+          sed -i -e 's/"version": "[^"]*",/"version": "${{ env.CDK_VERSION_NEW }}-alpha1",/' package.json
 
           # replace all dependencies with pinned to new
-          sed -i -e 's/"^*'${CDK_VERSION_NEW}'"/"'${STATE_newVersion}'"/g' package.json
+          sed -i -e 's/"^*${{ env.CDK_VERSION_CURRENT }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
 
           # add to branch & commit
-          git checkout -b chore/aws-cdk-upgrade-${STATE_newVersion}
+          git checkout -b chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}
           git add package.json package-lock.json
-          git commit -m "AWS CDK package update"
+          git commit -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}"
       - name: Create PR on Github
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
           set -ex
-          git push origin chore/aws-cdk-upgrade-${STATE_newVersion}
-          hub pull-request -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${STATE_newVersion}" -l chore,aws-cdk-update
+          git push origin chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}
+          hub pull-request -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
 
