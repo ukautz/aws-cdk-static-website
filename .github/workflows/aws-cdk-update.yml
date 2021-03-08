@@ -61,12 +61,12 @@ jobs:
           # add to branch & commit
           git checkout -b ${{ env.NEW_BRANCH }}
           git add package.json package-lock.json
-          git commit -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}"
+          git commit -m "Update AWS CDK from ${{ env.CDK_VERSION_CURRENT }} to ${{ env.CDK_VERSION_NEW }}"
       - name: Create PR on Github
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
           git push origin ${{ env.NEW_BRANCH }}
-          hub pull-request -b main -h ${{ env.NEW_BRANCH }} -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
+          hub pull-request -b main -h ${{ env.NEW_BRANCH }} -m "Update AWS CDK from ${ env.CDK_VERSION_CURRENT } to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
