@@ -19,16 +19,13 @@ jobs:
         run: |
           node --version
           npm --version
-      - name: Why I need to pull
-        run: |
-          git pull
       - name: Install current dependencies
         run: |
           npm install
       - name: Stash current version
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
-          echo $version > version.current
+          echo "::save-state name=currentVersion::${version}"
       - name: Update AWS CDK dependencies
         run: |
           npx update-by-scope @aws-cdk npm install
@@ -38,26 +35,29 @@ jobs:
       - name: Stash new version
         run: |
           version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
-          echo $version > version.new
-      - name: Configure github access
-        run: |
-          set -e
-          cat >>~/.netrc <<EOF
-          machine github.com
-            login $GITHUB_ACTOR
-            password $GITHUB_TOKEN
-          EOF
+          echo "::save-state name=newVersion::${version}"
       - name: Bump package version to dependency version
         run: |
           set -ex
 
           # set new version, there must be an easier way ..
-          currentVersion=$(cat version.current)
-          newVersion=$(cat version.new)
+          currentVersion=$STATE_currentVersion
+          newVersion=$STATE_newVersion
+
+          # bail out?
+          if [ $currentVersion == $newVersion ]; then
+            echo "::set-output name=takenAction::none"
+            exit
+          fi
+
+          # set new package version
+          echo "::set-output name=takenAction::update from ${currentVersion} to ${newVersion}"
+
+          # replace own version with alpha referencing latest
           sed -i -e 's/"version": "[^"]*",/"version": "'${newVersion}'-alpha1",/' package.json
 
-          # replace peer dependencies manually
-          sed -i -e 's/"'${currentVersion}'"/"'${newVersion}'"/g' package.json
+          # replace all dependencies with pinned to new
+          sed -i -e 's/"^*'${currentVersion}'"/"'${newVersion}'"/g' package.json
 
           # create persona
           git config --global user.name 'Github Actions'
