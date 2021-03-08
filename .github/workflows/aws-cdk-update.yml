@@ -43,16 +43,7 @@ jobs:
       - name: Describing Update
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
-          echo "Updating current version ${{ env.CDK_VERSION_CURRENT }} to new version ${{ env.CDK_VERSION_NEW }} is still the latest"
-      - name: Configure Github access
-        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
-        run: |
-          set -e
-          cat >>~/.netrc <<EOF
-          machine github.com
-            login $GITHUB_ACTOR
-            password $GITHUB_TOKEN
-          EOF
+          echo "Updating current version ${{ env.CDK_VERSION_CURRENT }} to new version ${{ env.CDK_VERSION_NEW }}"
       - name: Configure Github Persona
         if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
         run: |
@@ -80,4 +71,6 @@ jobs:
           set -ex
           git push origin chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}
           hub pull-request -m "Update AWS CDK from ${CDK_VERSION_NEW} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
