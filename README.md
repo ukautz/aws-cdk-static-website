@@ -21,14 +21,14 @@ In your stack:
 ```typescript
 import * as cdk from '@aws-cdk/core';
 import * as route53 from '@aws-cdk/aws-route53';
-import { StaticWebsite } from '@ukautz/aws-cdk-blogstack-static-website';
+import { StaticWebsite } from '@ukautz/aws-cdk-static-website';
 
 export class YourStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.Stack) {
     super(scope, id, props);
 
     // load or create a hosted zone
-    const hostedZone = route53.HostedZone.fromLookup(this, 'id', {
+    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: 'your-domain.tld',
     });
 
