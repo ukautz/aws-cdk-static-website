@@ -14,6 +14,8 @@ The AWS infrastructure looks like that:
 
 ## Usage
 
+**Note:** The NPM package is hosted on [Github packages](https://github.com/features/packages) as I do not consider it production ready and do not want to contribute to accidental installs… Read up how to use Github Packages hosted NPM packages if you want to use it. Read up how to use [Github Packages hosted NPM packages](https://docs.github.com/en/packages/guides/configuring-npm-for-use-with-github-packages#installing-a-package) if you want to use it
+
 In your stack:
 
 ```typescript
@@ -27,7 +29,7 @@ export class YourStack extends cdk.Stack {
 
     // load or create a hosted zone
     const hostedZone = route53.HostedZone.fromLookup(this, 'id', {
-      domainName: 'your-domain.tld,
+      domainName: 'your-domain.tld',
     });
 
     // create all static website infra
@@ -45,8 +47,10 @@ export class YourStack extends cdk.Stack {
 
 This is a very opinionated implementation:
 
-- _S3 bucket not as website_: In "website mode", an S3 bucket is public. I prefer the bucket to be completely transparent and not accessible, so this is the default. As a consequence, the fallback to `index.html` does not work. I mitigate that on the build site, by assuring all links point to specific documents, not folders that would require a fallback to said `index.html` document. To enable website mode use `websiteMode: true`
-- _All (peer-)dependencies are pinned version_, as `@experimental` constructs are being used, interface changes in minor upgrades are expected. I plan to use [dependabot](https://dependabot.com/), or a more targeted implementation, to automatically build this (and all my other AWS CDK modules) whenever a new AWS CDK version is released.
+- _Website Mode_: This module implements two behaviors that influence how website delivery from S3 is being done in regards to `index.html` files:
+  - `websiteMode: false` (default): The S3 bucket is hidden and closed, that is: not accessible from anything but CloudFront. This can only be done if the S3 bucket website is _not _ configured as a [website](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-websiteconfiguration.html). The consequence is: URLs _must_ point to files, _not_ folders. As in: `https://yourdomain.tld/blog/` will _not_ work, it must be `https://yourdomain.tld/blog/index.html` (or whichever HTML document contains the blog)
+  - `websiteMode: true`: The S3 bucket is openly (read) accessible by everyone, including CloudFront and the bucket is configured as a [website](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-websiteconfiguration.html), which means `index.html` is being used if the URL path points to a folder.
+- _All (peer-)dependencies are pinned version_, as `@experimental` constructs are being used, interface changes in minor upgrades are expected. I run a [tooling](.github/workflows/aws-cdk-update.yml) once a week that runs all the tests and creates new releases, assuming AWS CDK has a new release
 
 ## Useful commands
 
