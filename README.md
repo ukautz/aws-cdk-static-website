@@ -1,4 +1,4 @@
-# Blogstack: Static Website
+# AWS CDK Construct: Static Website
 
 An AWS CDK pattern / solution construct.
 
