@@ -21,6 +21,7 @@ jobs:
           push: true
           versionFromPackage: "@aws-cdk/core"
           versionSuffix: "-alpha1"
+          tagName: "v%NEW_VERSION%"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Github Packages
