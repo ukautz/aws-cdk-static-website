@@ -23,6 +23,7 @@ jobs:
           versionFromPackage: "@aws-cdk/core"
           versionSuffix: "-alpha1"
           tagName: "v%NEW_VERSION%"
+          debug: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Github Package environment
