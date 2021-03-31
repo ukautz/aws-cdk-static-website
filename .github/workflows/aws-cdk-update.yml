@@ -11,62 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Update AWS dependencies
+        id: syncer
+        uses: "@ukautz/github-action-npm-scope-syncer"
+        with:
+          scopes: "@aws-cdk"
+          updatePeerDependencies: "true"
+          enforcePinning: "true"
+          push: true
+          versionFromPackage: "@aws-cdk/core"
+          versionSuffix: "-alpha1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to Github Packages
+        if: steps.syncer.status == "updated"
+        uses: actions/setup-node@v2
         with:
           node-version: '14'
           registry-url: 'https://npm.pkg.github.com'
-      - name: Versions
-        run: |
-          node --version
-          npm --version
-      - name: Install Current Dependencies
         run: |
           npm install
-      - name: Stash current version
-        run: |
-          version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
-          echo "CDK_VERSION_CURRENT=${version}" >> $GITHUB_ENV
-      - name: Update AWS CDK Dependencies
-        run: |  
-          npx update-by-scope @aws-cdk npm install
-      - name: Test with updated dependencies
-        run: |
-          npm run test
-      - name: Stash New Version
-        run: |
-          version=$(npm run env | grep npm_package_dependencies__aws_cdk_core | sed -e 's/^.*=[^0-9]*//')
-          echo "CDK_VERSION_NEW=${version}" >> $GITHUB_ENV
-      - name: No Update Required
-        if: env.CDK_VERSION_CURRENT == env.CDK_VERSION_NEW
-        run: |
-          echo "Doing nothing, current version ${CDK_VERSION_NEW} is still the latest"
-      - name: Describing Update
-        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
-        run: |
-          echo "Updating current version ${{ env.CDK_VERSION_CURRENT }} to new version ${{ env.CDK_VERSION_NEW }}"
-          echo "NEW_BRANCH=chore/aws-cdk-upgrade-${{ env.CDK_VERSION_NEW }}" >> $GITHUB_ENV
-      - name: Configure Github Persona
-        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
-        run: |
-          git config --global user.name 'Github Actions'
-          git config --global user.email 'ukautz@users.noreply.github.com'
-      - name: Bump package version in new branch
-        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
-        run: |
-          # replace all old versions with
-          sed -i -e 's/"version": "[^"]*",/"version": "${{ env.CDK_VERSION_NEW }}-alpha1",/' package.json
-          sed -i -e 's/"^*${{ env.CDK_VERSION_CURRENT }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
-          sed -i -e 's/"^*${{ env.CDK_VERSION_NEW }}"/"${{ env.CDK_VERSION_NEW }}"/g' package.json
-
-          # add to branch & commit
-          git checkout -b ${{ env.NEW_BRANCH }}
-          git add package.json package-lock.json
-          git commit -m "Update AWS CDK from ${{ env.CDK_VERSION_CURRENT }} to ${{ env.CDK_VERSION_NEW }}"
-      - name: Create PR on Github
-        if: env.CDK_VERSION_CURRENT != env.CDK_VERSION_NEW
-        run: |
-          git push origin ${{ env.NEW_BRANCH }}
-          hub pull-request -b main -h ${{ env.NEW_BRANCH }} -m "Update AWS CDK from ${{ env.CDK_VERSION_CURRENT }} to ${{ env.CDK_VERSION_NEW }}" -l chore,aws-cdk-update
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          npm run build
+          npm publish
 
