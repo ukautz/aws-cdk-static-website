@@ -2,7 +2,7 @@ name: Update AWS CDK packages
 
 on:
   schedule:
-    - cron: "0 10 * * *"
+    - cron: "0 */6 * * *"
   workflow_dispatch: {}
 
 jobs:
@@ -23,10 +23,10 @@ jobs:
           versionFromPackage: "@aws-cdk/core"
           versionSuffix: "-alpha1"
           tagName: "v%NEW_VERSION%"
-          debug: "true"
+          debug: "false"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Github Package environment
+      - name: Setup Github Packages environment
         if: steps.syncer.status == 'updated'
         uses: actions/setup-node@v2
         with:
