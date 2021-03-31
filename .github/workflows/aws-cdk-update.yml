@@ -10,8 +10,9 @@ jobs:
     name: Publish to Github Packages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Update AWS dependencies
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Update AWS CDK package dependencies
         id: syncer
         uses: "@ukautz/github-action-npm-scope-syncer"
         with:
@@ -24,12 +25,14 @@ jobs:
           tagName: "v%NEW_VERSION%"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to Github Packages
+      - name: Setup Github Package environment
         if: steps.syncer.status == "updated"
         uses: actions/setup-node@v2
         with:
           node-version: '14'
           registry-url: 'https://npm.pkg.github.com'
+      - name: Publish to Github Packages
+        if: steps.syncer.status == "updated"
         run: |
           npm install
           npm run build
