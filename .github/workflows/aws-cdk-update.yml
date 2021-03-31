@@ -19,7 +19,7 @@ jobs:
           scopes: "@aws-cdk"
           updatePeerDependencies: "true"
           enforcePinning: "true"
-          push: true
+          push: "true"
           versionFromPackage: "@aws-cdk/core"
           versionSuffix: "-alpha1"
           tagName: "v%NEW_VERSION%"
