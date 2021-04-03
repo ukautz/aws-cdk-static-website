@@ -632,7 +632,17 @@ Object {
           "DefaultTTL": 123,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -1329,7 +1339,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -2018,7 +2038,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -2711,7 +2741,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -3428,7 +3468,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -4119,7 +4169,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -4800,7 +4860,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -5489,7 +5559,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
@@ -6178,7 +6258,17 @@ Object {
           "DefaultTTL": 3600,
           "MaxTTL": 31536000,
           "MinTTL": 0,
-          "Name": "MyTestConstructDistributionCachePolicy13710A46",
+          "Name": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "MyTestConstructDistributionCachePolicy13710A46-",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
           "ParametersInCacheKeyAndForwardedToOrigin": Object {
             "CookiesConfig": Object {
               "CookieBehavior": "none",
