@@ -14,28 +14,16 @@ jobs:
         uses: actions/checkout@v2
       - name: Update AWS CDK package dependencies
         id: syncer
-        uses: ukautz/github-action-npm-scope-syncer@v0.7.0
+        uses: ukautz/github-action-npm-scope-syncer@v0.7.1
         with:
           scopes: "@aws-cdk"
+          versionFromPackage: "@aws-cdk/core"
+          versionSuffix: "-alpha1"
           updatePeerDependencies: "true"
           enforcePinning: "true"
           push: "true"
-          versionFromPackage: "@aws-cdk/core"
-          versionSuffix: "-alpha1"
           tagName: "v%NEW_VERSION%"
-          debug: "false"
+          debug: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Github Packages environment
-        if: steps.syncer.status == 'updated'
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          registry-url: 'https://npm.pkg.github.com'
-      - name: Publish to Github Packages
-        if: steps.syncer.status == 'updated'
-        run: |
-          npm install
-          npm run build
-          npm publish
 

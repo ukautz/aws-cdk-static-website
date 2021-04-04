@@ -1,28 +1,23 @@
-name: Test PRs
+name: Test PRs to Trunk
 
 on:
   pull_request:
     branches:
       - main
 
-
 jobs:
   test:
-    name: Run tests
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Setup Node Environment
+        uses: actions/setup-node@v2
         with:
           node-version: '14'
           registry-url: 'https://npm.pkg.github.com'
-      - name: Versions
+      - name: Run Tests
         run: |
-          node --version
-          npm --version
-      - name: Install dependencies
-        run: npm install
-      - name: Test
-        run: |
+          npm install
           npm run test
