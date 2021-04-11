@@ -1,6 +1,6 @@
 {
   "name": "@ukautz/aws-cdk-static-website",
-  "version": "1.97.0-alpha2",
+  "version": "1.97.0-alpha1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
