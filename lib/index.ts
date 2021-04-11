@@ -148,7 +148,7 @@ export class StaticWebsite extends cdk.Construct {
   /**
    * The CloudFront distribution that serves the static website
    */
-  public readonly distribution: cloudfront.IDistribution;
+  public readonly distribution: cloudfront.Distribution;
 
   /**
    * The DNS records for the domain and domain aliases that point to the CloudFront that serves the static website
@@ -166,7 +166,7 @@ export class StaticWebsite extends cdk.Construct {
     this.uploadContents(props);
   }
 
-  private initDistribution(props: StaticWebsiteProps): cloudfront.IDistribution {
+  private initDistribution(props: StaticWebsiteProps): cloudfront.Distribution {
     // default: no cookies, or generally headers or query parameters are used to build cache key. ONLY PATH
     const cachePolicy = new cloudfront.CachePolicy(this, 'DistributionCachePolicy', {
       cookieBehavior: !props.cacheCookies
