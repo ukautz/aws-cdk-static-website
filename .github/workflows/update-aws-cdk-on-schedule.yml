@@ -30,13 +30,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Github Packages Node Environment
-        if: steps.syncer.status == 'updated'
+        if: steps.syncer.outputs.status == 'updated'
         uses: actions/setup-node@v2
         with:
           node-version: '14'
           registry-url: 'https://npm.pkg.github.com'
       - name: Publish to Github Packages
-        if: steps.syncer.status == 'updated'
+        if: steps.syncer.outputs.status == 'updated'
         run: |
           npm install
           npm run build
