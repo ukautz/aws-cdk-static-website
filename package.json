@@ -16,7 +16,6 @@
     "jest": "^26.4.2",
     "ts-jest": "^26.5.3",
     "typescript": "~3.9.7",
-
     "@aws-cdk/aws-certificatemanager": "^1.110.1",
     "@aws-cdk/aws-cloudfront": "^1.110.1",
     "@aws-cdk/aws-cloudfront-origins": "^1.110.1",
