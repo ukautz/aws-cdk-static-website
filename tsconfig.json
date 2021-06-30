@@ -17,8 +17,9 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization":false,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "outDir": "dist",
   },
-  "exclude": ["cdk.out", "static-website.drawio", "static-website.png"]
+  "exclude": ["dist", "docs", "test"]
 }
 
