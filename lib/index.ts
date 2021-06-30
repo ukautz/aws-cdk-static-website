@@ -8,17 +8,8 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as targets from '@aws-cdk/aws-route53-targets';
 
 const defaultCacheDuration = cdk.Duration.hours(1);
-export interface StaticWebsiteProps {
-  /**
-   * The bucket which will contain the website contents.
-   *
-   * Can be:
-   * - undefined: new bucket will be created and maintained by the construct (deleted when removed, it's supposed to be generated static website data)
-   * - "bucket-name": existing bucket by that name will be used
-   * - s3.IBucket: existing provided bucket will be used
-   */
-  bucket?: string | s3.IBucket;
 
+export interface StaticWebsiteProps {
   /**
    * The prefix (path) where the contents can be found in the bucket
    *
@@ -31,7 +22,7 @@ export interface StaticWebsiteProps {
    *
    * Can be:
    * - undefined: new certificate will be created and maintained by the construct
-   * - "arn" - loads existing certificate
+   * - "arn:of:cert:..": loads existing certificate
    * - acm.ICertificate: uses provided certificate
    *
    *  If provided in any way, HTTPS will be enforced
@@ -81,7 +72,7 @@ export interface StaticWebsiteProps {
   cacheQuery?: false | string[];
 
   /**
-   * The directory that contains the website contents that are to be published
+   * The local directory that contains the website contents that are to be published
    */
   directory: string;
 
@@ -120,15 +111,17 @@ export interface StaticWebsiteProps {
    * @default index.html
    */
   indexPage?: string;
-
-  /**
-   * Whether to enable website mode, which allows to "link to directory that contain an index.html file",
-   * but also requires the S3 bucket to be publicly accessible, hence no guarantees all traffic comes through CloudFront
-   */
-  websiteMode?: boolean;
 }
 
 const trimSlashes = (str: string): string => str.replace(/^\/+/, '').replace(/^\/+/, '');
+
+/**
+ * A level 3 construct that implements a static website, consisting of:
+ * - A publicly readable S3 bucket, that mirrors a local directory of HTML files and associated assets
+ * - A CloudFront distribution, as a CDN in front of the S3 bucket
+ * - A set of one or more Route53 records to route to the CloudFront
+ * - An ACM certificate, that is associated with above CloudFront
+ */
 export class StaticWebsite extends cdk.Construct {
   /**
    * The hosted zone used for the static website
@@ -138,7 +131,7 @@ export class StaticWebsite extends cdk.Construct {
   /**
    * The bucket in which the static website contents are in
    */
-  public readonly bucket: s3.IBucket;
+  public readonly bucket: s3.Bucket;
 
   /**
    * The certificate associated with the CloudFront that serves the static website
@@ -159,7 +152,7 @@ export class StaticWebsite extends cdk.Construct {
     super(scope, id);
 
     this.hostedZone = props.hostedZone;
-    this.bucket = this.loadBucket(props);
+    this.bucket = this.initBucket(props);
     this.certificate = this.loadCertificate(props);
     this.distribution = this.initDistribution(props);
     this.records = this.initRecords(props);
@@ -233,28 +226,19 @@ export class StaticWebsite extends cdk.Construct {
     });
   }
 
-  private loadBucket(props: StaticWebsiteProps): s3.IBucket {
-    if (!props.bucket || typeof props.bucket === 'string') {
-      return new s3.Bucket(this, 'Bucket', {
-        bucketName: props.bucket,
+  private initBucket(props: StaticWebsiteProps): s3.Bucket {
+    return new s3.Bucket(this, 'Bucket', {
+      // this is a website bucket, it must be publicly accessible
+      publicReadAccess: true,
+      websiteIndexDocument: props.indexPage ?? 'index.html',
+      websiteErrorDocument: props.errorPage ?? 'error.html',
 
-        // whether or not website configuration is enabled
-        ...(props.websiteMode
-          ? {
-              publicReadAccess: true,
-              websiteIndexDocument: props.indexPage ?? 'index.html',
-              websiteErrorDocument: props.errorPage ?? 'error.html',
-            }
-          : {}),
+      // enable encryption at rest of the blog contents - not that it is public anyway ..
+      encryption: s3.BucketEncryption.S3_MANAGED,
 
-        // enable encryption at rest of the blog contents - not that it is public anyway ..
-        encryption: s3.BucketEncryption.S3_MANAGED,
-
-        // Note: this bucket is intended to contain only contents build during deploy, so it can be safely removed
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-      });
-    }
-    return props.bucket;
+      // Note: this bucket is intended to contain only contents build during deploy, so it can be safely removed
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
   }
 
   private loadCertificate(props: StaticWebsiteProps): acm.ICertificate {
