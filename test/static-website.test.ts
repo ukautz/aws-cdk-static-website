@@ -1,8 +1,7 @@
-import { expect as expectCDK, countResources, haveResource, haveResourceLike } from '@aws-cdk/assert';
-import * as cdk from '@aws-cdk/core';
-import * as route53 from '@aws-cdk/aws-route53';
+import * as cdk from 'aws-cdk-lib';
+import { aws_route53 as route53 } from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
 import * as path from 'path';
-import { assertSnapshot } from './utils';
 import * as lib from '../lib/index';
 
 /*
@@ -12,12 +11,13 @@ describe('Stack Website', () => {
   describe('Default', () => {
     // WHEN
     const stack = createTestStack();
+    const template = Template.fromStack(stack);
 
     // THEN
     assertSnapshot(stack);
     assertBucket(stack);
-    assertCloudFront(stack);
-    assertDelegationRecord(stack);
+    assertCloudFront(template);
+    assertDelegationRecord(template);
   });
 
   describe('Storage', () => {
@@ -26,22 +26,21 @@ describe('Stack Website', () => {
       const stack = createTestStack({
         bucketContentPrefix: '/my/prefix/path',
       });
+      const template = Template.fromStack(stack);
 
       // THEN
       assertSnapshot(stack);
 
       test('CloudFront delegates to prefix', () => {
-        expectCDK(stack).to(
-          haveResourceLike('AWS::CloudFront::Distribution', {
-            DistributionConfig: {
-              Origins: [
-                {
-                  OriginPath: '/my/prefix/path',
-                },
-              ],
-            },
-          })
-        );
+        template.hasResourceProperties('AWS::CloudFront::Distribution', {
+          DistributionConfig: {
+            Origins: [
+              {
+                OriginPath: '/my/prefix/path',
+              },
+            ],
+          },
+        });
       });
     });
   });
@@ -52,10 +51,11 @@ describe('Stack Website', () => {
       const stack = createTestStack({
         cacheDuration: cdk.Duration.seconds(123),
       });
+      const template = Template.fromStack(stack);
 
       // THEN
       assertSnapshot(stack);
-      assertCloudFront(stack, {
+      assertCloudFront(template, {
         cacheDuration: 123,
       });
     });
@@ -65,10 +65,11 @@ describe('Stack Website', () => {
         errorPage: 'custom-error.html',
         errorCacheDuration: cdk.Duration.seconds(123),
       });
+      const template = Template.fromStack(stack);
 
       // THEN
       assertSnapshot(stack);
-      assertCloudFront(stack, {
+      assertCloudFront(template, {
         errorPage: 'custom-error.html',
         errorCacheDuration: 123,
       });
@@ -80,31 +81,41 @@ describe('Stack Website', () => {
     const stack = createTestStack({
       domainAliases: ['www.blog.acme.tld'],
     });
+    const template = Template.fromStack(stack);
 
     // THEN
     assertSnapshot(stack);
     test('Used in certificate generation', () => {
-      expectCDK(stack).to(
-        haveResourceLike('AWS::CloudFormation::CustomResource', {
-          DomainName: 'blog.acme.tld',
-          SubjectAlternativeNames: ['www.blog.acme.tld'],
-        })
-      );
+      template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
+        DomainName: 'blog.acme.tld',
+        SubjectAlternativeNames: ['www.blog.acme.tld'],
+      });
     });
     test('Used as CloudFront alias', () => {
-      expectCDK(stack).to(
-        haveResourceLike('AWS::CloudFront::Distribution', {
-          DistributionConfig: {
-            Aliases: ['blog.acme.tld', 'www.blog.acme.tld'],
-          },
-        })
-      );
+      template.hasResourceProperties('AWS::CloudFront::Distribution', {
+        DistributionConfig: {
+          Aliases: ['blog.acme.tld', 'www.blog.acme.tld'],
+        },
+      });
     });
     test('Has all delegation records', () => {
-      expectCDK(stack).to(countResources('AWS::Route53::RecordSet', 2));
+      template.resourceCountIs('AWS::Route53::RecordSet', 2);
     });
   });
 });
+
+/* function getChild(parent: IConstruct, ...names: string[]): IConstruct {
+  const name = names.shift();
+  const child = parent.node.findChild(name as string);
+  return names.length ? getChild(child, ...names) : child;
+} */
+
+function assertSnapshot(stack: cdk.Stack): void {
+  const template = Template.fromStack(stack);
+  it('Has consistent snapshot', () => {
+    expect(template.toJSON()).toMatchSnapshot();
+  });
+}
 
 function createTestStack(
   props?: Partial<lib.StaticWebsiteProps>,
@@ -125,93 +136,82 @@ function createTestStack(
 }
 
 function assertBucket(stack: cdk.Stack) {
-  expectCDK(stack).to(
-    haveResource('AWS::S3::Bucket', {
-      WebsiteConfiguration: {
-        ErrorDocument: 'error.html',
-        IndexDocument: 'index.html',
-      },
-      BucketEncryption: {
-        ServerSideEncryptionConfiguration: [
-          {
-            ServerSideEncryptionByDefault: {
-              SSEAlgorithm: 'AES256',
-            },
+  const template = Template.fromStack(stack);
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    WebsiteConfiguration: {
+      ErrorDocument: 'error.html',
+      IndexDocument: 'index.html',
+    },
+    BucketEncryption: {
+      ServerSideEncryptionConfiguration: [
+        {
+          ServerSideEncryptionByDefault: {
+            SSEAlgorithm: 'AES256',
           },
-        ],
-      },
-    })
-  );
+        },
+      ],
+    },
+  });
 }
 
 function assertCloudFront(
-  stack: cdk.Stack,
+  template: Template,
   opt?: { cacheDuration?: number; errorPage?: string; errorCacheDuration?: number }
 ) {
   describe('CDN Distribution', () => {
     test('Is in place', () => {
-      expectCDK(stack).to(countResources('AWS::CloudFront::Distribution', 1));
+      template.resourceCountIs('AWS::CloudFront::Distribution', 1);
     });
     test('Uses public domain', () => {
-      expectCDK(stack).to(
-        haveResourceLike('AWS::CloudFront::Distribution', {
-          DistributionConfig: {
-            Aliases: ['blog.acme.tld'],
-          },
-        })
-      );
+      template.hasResourceProperties('AWS::CloudFront::Distribution', {
+        DistributionConfig: {
+          Aliases: ['blog.acme.tld'],
+        },
+      });
     });
     test('Has certificate', () => {
-      expectCDK(stack).to(
-        haveResourceLike('AWS::CloudFront::Distribution', {
-          DistributionConfig: {
-            ViewerCertificate: {
-              SslSupportMethod: 'sni-only',
-            },
+      template.hasResourceProperties('AWS::CloudFront::Distribution', {
+        DistributionConfig: {
+          ViewerCertificate: {
+            SslSupportMethod: 'sni-only',
           },
-        })
-      );
+        },
+      });
     });
     test('Limits cache duration', () => {
-      expectCDK(stack).to(
-        haveResourceLike('AWS::CloudFront::CachePolicy', {
-          CachePolicyConfig: {
-            DefaultTTL: opt?.cacheDuration ?? 3600,
-          },
-        })
-      );
+      template.hasResourceProperties('AWS::CloudFront::CachePolicy', {
+        CachePolicyConfig: {
+          DefaultTTL: opt?.cacheDuration ?? 3600,
+        },
+      });
     });
     if (opt?.errorPage) {
       test('Custom error page for 404s', () => {
-        expectCDK(stack).to(
-          haveResourceLike('AWS::CloudFront::Distribution', {
-            DistributionConfig: {
-              CustomErrorResponses: [
-                {
-                  ErrorCode: 404,
-                  ErrorCachingMinTTL: opt.errorCacheDuration,
-                  ResponsePagePath: '/' + opt.errorPage,
-                },
-              ],
-            },
-          })
-        );
+        template.hasResourceProperties('AWS::CloudFront::Distribution', {
+          DistributionConfig: {
+            CustomErrorResponses: [
+              {
+                ErrorCode: 404,
+                ErrorCachingMinTTL: opt.errorCacheDuration,
+                ResponsePagePath: '/' + opt.errorPage,
+              },
+            ],
+          },
+        });
       });
     }
   });
 }
 
-function assertDelegationRecord(stack: cdk.Stack) {
+function assertDelegationRecord(template: Template) {
   describe('DNS Delegation Record', () => {
     test('Is in place', () => {
-      expectCDK(stack).to(countResources('AWS::Route53::RecordSet', 1));
+      template.resourceCountIs('AWS::Route53::RecordSet', 1);
     });
     test('Use public domain', () => {
-      expectCDK(stack).to(
-        haveResource('AWS::Route53::RecordSet', {
-          Name: 'blog.acme.tld.',
-        })
-      );
+      template.hasResourceProperties('AWS::Route53::RecordSet', {
+        Name: 'blog.acme.tld.',
+      });
     });
   });
 }

@@ -1,11 +1,14 @@
-import * as cdk from '@aws-cdk/core';
-import * as acm from '@aws-cdk/aws-certificatemanager';
-import * as cloudfront from '@aws-cdk/aws-cloudfront';
-import * as deployment from '@aws-cdk/aws-s3-deployment';
-import * as origins from '@aws-cdk/aws-cloudfront-origins';
-import * as route53 from '@aws-cdk/aws-route53';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as targets from '@aws-cdk/aws-route53-targets';
+import * as cdk from 'aws-cdk-lib';
+import {
+  aws_certificatemanager as acm,
+  aws_cloudfront as cloudfront,
+  aws_cloudfront_origins as origins,
+  aws_route53 as route53,
+  aws_route53_targets as targets,
+  aws_s3 as s3,
+  aws_s3_deployment as deployment,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
 const defaultCacheDuration = cdk.Duration.hours(1);
 
@@ -122,7 +125,7 @@ const trimSlashes = (str: string): string => str.replace(/^\/+/, '').replace(/^\
  * - A set of one or more Route53 records to route to the CloudFront
  * - An ACM certificate, that is associated with above CloudFront
  */
-export class StaticWebsite extends cdk.Construct {
+export class StaticWebsite extends Construct {
   /**
    * The hosted zone used for the static website
    */
@@ -148,7 +151,7 @@ export class StaticWebsite extends cdk.Construct {
    */
   public readonly records: route53.IRecordSet[];
 
-  constructor(scope: cdk.Construct, id: string, props: StaticWebsiteProps) {
+  constructor(scope: Construct, id: string, props: StaticWebsiteProps) {
     super(scope, id);
 
     this.hostedZone = props.hostedZone;
