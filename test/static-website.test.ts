@@ -85,8 +85,8 @@ describe('Stack Website', () => {
 
     // THEN
     assertSnapshot(stack);
-    test('Used in certificate generation', () => {
-      template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
+    test('Used in certificate', () => {
+      template.hasResourceProperties('AWS::CertificateManager::Certificate', {
         DomainName: 'blog.acme.tld',
         SubjectAlternativeNames: ['www.blog.acme.tld'],
       });

@@ -240,143 +240,26 @@ exports[`Stack Website CDN Cache Duration Has consistent snapshot 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": {
-      "DependsOn": [
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "861509f9607aa6bb9fd7034fb10fe6f0c60d91dfd7f010b9ef666869dec9bbd9.zip",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.blog.acme.tld",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/",
-                    {
-                      "Ref": "HostedZoneDB99F866",
-                    },
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "Roles": [
-          {
-            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": {
-      "DeletionPolicy": "Delete",
+    "MyTestConstructCertificate41948685": {
       "Properties": {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": {
-          "Ref": "HostedZoneDB99F866",
-        },
-        "Region": "us-east-1",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
-            "Arn",
-          ],
-        },
+        "DomainValidationOptions": [
+          {
+            "DomainName": "blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Default/MyTestConstruct/Certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
       },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": {
       "Properties": {
@@ -471,10 +354,7 @@ exports[`Stack Website CDN Cache Duration Has consistent snapshot 1`] = `
           ],
           "ViewerCertificate": {
             "AcmCertificateArn": {
-              "Fn::GetAtt": [
-                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
-                "Arn",
-              ],
+              "Ref": "MyTestConstructCertificate41948685",
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
             "SslSupportMethod": "sni-only",
@@ -815,143 +695,26 @@ exports[`Stack Website CDN Custom Error Page Has consistent snapshot 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": {
-      "DependsOn": [
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "861509f9607aa6bb9fd7034fb10fe6f0c60d91dfd7f010b9ef666869dec9bbd9.zip",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.blog.acme.tld",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/",
-                    {
-                      "Ref": "HostedZoneDB99F866",
-                    },
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "Roles": [
-          {
-            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": {
-      "DeletionPolicy": "Delete",
+    "MyTestConstructCertificate41948685": {
       "Properties": {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": {
-          "Ref": "HostedZoneDB99F866",
-        },
-        "Region": "us-east-1",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
-            "Arn",
-          ],
-        },
+        "DomainValidationOptions": [
+          {
+            "DomainName": "blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Default/MyTestConstruct/Certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
       },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": {
       "Properties": {
@@ -1054,10 +817,7 @@ exports[`Stack Website CDN Custom Error Page Has consistent snapshot 1`] = `
           ],
           "ViewerCertificate": {
             "AcmCertificateArn": {
-              "Fn::GetAtt": [
-                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
-                "Arn",
-              ],
+              "Ref": "MyTestConstructCertificate41948685",
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
             "SslSupportMethod": "sni-only",
@@ -1398,143 +1158,26 @@ exports[`Stack Website Default Has consistent snapshot 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": {
-      "DependsOn": [
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "861509f9607aa6bb9fd7034fb10fe6f0c60d91dfd7f010b9ef666869dec9bbd9.zip",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.blog.acme.tld",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/",
-                    {
-                      "Ref": "HostedZoneDB99F866",
-                    },
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "Roles": [
-          {
-            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": {
-      "DeletionPolicy": "Delete",
+    "MyTestConstructCertificate41948685": {
       "Properties": {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": {
-          "Ref": "HostedZoneDB99F866",
-        },
-        "Region": "us-east-1",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
-            "Arn",
-          ],
-        },
+        "DomainValidationOptions": [
+          {
+            "DomainName": "blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Default/MyTestConstruct/Certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
       },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": {
       "Properties": {
@@ -1629,10 +1272,7 @@ exports[`Stack Website Default Has consistent snapshot 1`] = `
           ],
           "ViewerCertificate": {
             "AcmCertificateArn": {
-              "Fn::GetAtt": [
-                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
-                "Arn",
-              ],
+              "Ref": "MyTestConstructCertificate41948685",
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
             "SslSupportMethod": "sni-only",
@@ -1973,147 +1613,35 @@ exports[`Stack Website Domain aliases Has consistent snapshot 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": {
-      "DependsOn": [
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "861509f9607aa6bb9fd7034fb10fe6f0c60d91dfd7f010b9ef666869dec9bbd9.zip",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.blog.acme.tld",
-                    "*.www.blog.acme.tld",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/",
-                    {
-                      "Ref": "HostedZoneDB99F866",
-                    },
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "Roles": [
-          {
-            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": {
-      "DeletionPolicy": "Delete",
+    "MyTestConstructCertificate41948685": {
       "Properties": {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": {
-          "Ref": "HostedZoneDB99F866",
-        },
-        "Region": "us-east-1",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
-            "Arn",
-          ],
-        },
+        "DomainValidationOptions": [
+          {
+            "DomainName": "blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+          {
+            "DomainName": "www.blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+        ],
         "SubjectAlternativeNames": [
           "www.blog.acme.tld",
         ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Default/MyTestConstruct/Certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
       },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": {
       "Properties": {
@@ -2209,10 +1737,7 @@ exports[`Stack Website Domain aliases Has consistent snapshot 1`] = `
           ],
           "ViewerCertificate": {
             "AcmCertificateArn": {
-              "Fn::GetAtt": [
-                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
-                "Arn",
-              ],
+              "Ref": "MyTestConstructCertificate41948685",
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
             "SslSupportMethod": "sni-only",
@@ -2580,143 +2105,26 @@ exports[`Stack Website Storage Bucket Prefix Has consistent snapshot 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "MyTestConstructCertificateCertificateRequestorFunctionBE59448E": {
-      "DependsOn": [
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "861509f9607aa6bb9fd7034fb10fe6f0c60d91dfd7f010b9ef666869dec9bbd9.zip",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.blog.acme.tld",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/",
-                    {
-                      "Ref": "HostedZoneDB99F866",
-                    },
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy36F812A7",
-        "Roles": [
-          {
-            "Ref": "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "MyTestConstructCertificateCertificateRequestorFunctionServiceRoleF0CE0CC7": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "MyTestConstructCertificateCertificateRequestorResource5D7905BC": {
-      "DeletionPolicy": "Delete",
+    "MyTestConstructCertificate41948685": {
       "Properties": {
         "DomainName": "blog.acme.tld",
-        "HostedZoneId": {
-          "Ref": "HostedZoneDB99F866",
-        },
-        "Region": "us-east-1",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "MyTestConstructCertificateCertificateRequestorFunctionBE59448E",
-            "Arn",
-          ],
-        },
+        "DomainValidationOptions": [
+          {
+            "DomainName": "blog.acme.tld",
+            "HostedZoneId": {
+              "Ref": "HostedZoneDB99F866",
+            },
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Default/MyTestConstruct/Certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
       },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "MyTestConstructDeploymentAwsCliLayerFFFCF7AD": {
       "Properties": {
@@ -2813,10 +2221,7 @@ exports[`Stack Website Storage Bucket Prefix Has consistent snapshot 1`] = `
           ],
           "ViewerCertificate": {
             "AcmCertificateArn": {
-              "Fn::GetAtt": [
-                "MyTestConstructCertificateCertificateRequestorResource5D7905BC",
-                "Arn",
-              ],
+              "Ref": "MyTestConstructCertificate41948685",
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
             "SslSupportMethod": "sni-only",

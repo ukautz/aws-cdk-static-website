@@ -250,11 +250,10 @@ export class StaticWebsite extends Construct {
     } else if (props.certificate) {
       return props.certificate;
     }
-    return new acm.DnsValidatedCertificate(this, 'Certificate', {
+    return new acm.Certificate(this, 'Certificate', {
       domainName: props.domain,
       subjectAlternativeNames: props.domainAliases,
-      hostedZone: this.hostedZone,
-      region: 'us-east-1',
+      validation: acm.CertificateValidation.fromDns(this.hostedZone),
     });
   }
 }
