@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { aws_route53 as route53 } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
+import { IConstruct } from 'constructs';
 import * as path from 'path';
 import * as lib from '../lib/index';
 
@@ -102,13 +103,48 @@ describe('Stack Website', () => {
       template.resourceCountIs('AWS::Route53::RecordSet', 2);
     });
   });
+
+  describe('Non us-east-1 region', () => {
+    // WHEN
+    const stack = createTestStack({}, undefined, 'us-east-2');
+    const template = Template.fromStack(stack);
+
+    // THEN
+    assertSnapshot(stack);
+    test('Lambda to manage certificate is created', () => {
+      template.hasResourceProperties('AWS::Lambda::Function', {
+        Handler: 'index.certificateRequestHandler',
+      });
+    });
+    test('Custom resource that references certificate is created', () => {
+      template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
+        DomainName: 'blog.acme.tld',
+        Region: 'us-east-1',
+      });
+    });
+    test('CloudFront is referencing certificate requestor', () => {
+      const certificate = getChild(
+        stack,
+        'MyTestConstruct',
+        'Certificate',
+        'CertificateRequestorResource'
+      ) as cdk.CustomResource;
+      template.hasResourceProperties('AWS::CloudFront::Distribution', {
+        DistributionConfig: {
+          Aliases: ['blog.acme.tld'],
+          ViewerCertificate: {
+            AcmCertificateArn: stack.resolve(certificate.getAtt('Arn')),
+          },
+        },
+      });
+    });
+  });
 });
 
-/* function getChild(parent: IConstruct, ...names: string[]): IConstruct {
-  const name = names.shift();
-  const child = parent.node.findChild(name as string);
+function getChild(parent: IConstruct, ...names: string[]): IConstruct {
+  const child = parent.node.findChild(names.shift() as string);
   return names.length ? getChild(child, ...names) : child;
-} */
+}
 
 function assertSnapshot(stack: cdk.Stack): void {
   const template = Template.fromStack(stack);
@@ -119,9 +155,14 @@ function assertSnapshot(stack: cdk.Stack): void {
 
 function createTestStack(
   props?: Partial<lib.StaticWebsiteProps>,
-  generate?: (stack: cdk.Stack) => Partial<lib.StaticWebsiteProps>
+  generate?: (stack: cdk.Stack) => Partial<lib.StaticWebsiteProps>,
+  region?: string
 ): cdk.Stack {
-  const stack = new cdk.Stack();
+  const stack = new cdk.Stack(undefined, 'Stack', {
+    env: {
+      region: region || 'us-east-1',
+    },
+  });
   const hostedZone = new route53.HostedZone(stack, 'HostedZone', {
     zoneName: 'acme.tld',
   });
