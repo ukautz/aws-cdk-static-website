@@ -46,6 +46,6 @@ export class YourStack extends cdk.Stack {
 
 **Note**: See the [`StaticWebsiteProps` interface](docs/interfaces/staticwebsiteprops.md) for all available properties.
 
-## License
+## See also
 
-[MIT](LICENSE)
+- [`@ukautz/aws-cdk-domain-redirector`](https://github.com/ukautz/aws-cdk-domain-redirector) - an AWS-CDK L3 construct for HTTPS domain redirection
