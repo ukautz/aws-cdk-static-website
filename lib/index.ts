@@ -7,6 +7,7 @@ import {
   aws_route53_targets as targets,
   aws_s3 as s3,
   aws_s3_deployment as deployment,
+  Stack,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -250,10 +251,24 @@ export class StaticWebsite extends Construct {
     } else if (props.certificate) {
       return props.certificate;
     }
-    return new acm.Certificate(this, 'Certificate', {
-      domainName: props.domain,
-      subjectAlternativeNames: props.domainAliases,
-      validation: acm.CertificateValidation.fromDns(this.hostedZone),
-    });
+
+    // certificate for CloudFront must be in us-east-1 -> only way to do
+    // is creating additional stack in that region, that holds the certificate
+    // -> while `DnsValidatedCertificate` it is currently the only resources
+    // that does that (create the other stack in us-east-1) -> use that, in case
+    // not in us-east-1
+    // See: https://github.com/aws/aws-cdk/pull/24543
+    return Stack.of(this).region == 'us-east-1'
+      ? new acm.Certificate(this, 'Certificate', {
+          domainName: props.domain,
+          subjectAlternativeNames: props.domainAliases,
+          validation: acm.CertificateValidation.fromDns(this.hostedZone),
+        })
+      : new acm.DnsValidatedCertificate(this, 'Certificate', {
+          domainName: props.domain,
+          subjectAlternativeNames: props.domainAliases,
+          hostedZone: this.hostedZone,
+          region: 'us-east-1',
+        });
   }
 }
